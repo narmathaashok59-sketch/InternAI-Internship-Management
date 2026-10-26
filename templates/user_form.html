@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Add user · InternAI{% endblock %}
+{% block content %}
+<div class="form-page"><div class="page-heading"><div><span class="eyebrow">PEOPLE</span><h1>Create an account</h1><p class="muted">Add an intern, mentor or another admin.</p></div></div>
+<form method="post" class="form-card wide">
+  <div class="form-grid">
+    <label>Full name<input name="full_name" required placeholder="e.g. Priya Kumar"></label>
+    <label>Email address<input name="email" type="email" required placeholder="name@example.com"></label>
+    <label>Temporary password<input name="password" type="password" minlength="8" required placeholder="At least 8 characters"></label>
+    <label>Role<select name="role" required><option value="intern">Intern</option><option value="mentor">Mentor</option><option value="admin">Admin</option></select></label>
+    <label class="span-2">Department / team<input name="department" placeholder="e.g. AI / Web Development"></label>
+  </div>
+  <div class="form-actions"><a class="button secondary" href="{{ url_for('dashboard') }}">Cancel</a><button class="button primary" type="submit">Create account →</button></div>
+</form></div>
+{% endblock %}

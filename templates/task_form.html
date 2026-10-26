@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Assign task · InternAI{% endblock %}
+{% block content %}
+<div class="form-page"><div class="page-heading"><div><span class="eyebrow">TASK WORKFLOW</span><h1>Assign a task</h1><p class="muted">The intern receives an email when the task is saved.</p></div></div>
+<form method="post" class="form-card wide">
+  {% if not interns %}<div class="flash warning">No intern accounts exist yet. Create an intern account before assigning a task.</div>{% endif %}
+  <div class="form-grid">
+    <label class="span-2">Task title<input name="title" required placeholder="e.g. Build a responsive login page"></label>
+    <label class="span-2">Task description<textarea name="description" rows="4" required placeholder="Describe the expected output and requirements…"></textarea></label>
+    <label>Assign to intern<select name="intern_id" required><option value="">Select an intern</option>{% for intern in interns %}<option value="{{ intern.id }}">{{ intern.full_name }} — {{ intern.email }}</option>{% endfor %}</select></label>
+    <label>Mentor<select name="mentor_id"><option value="">Use current mentor / no mentor</option>{% for mentor in mentors %}<option value="{{ mentor.id }}">{{ mentor.full_name }}</option>{% endfor %}</select></label>
+    <label>Task deadline<input type="date" name="deadline" id="deadline"></label>
+    <label>Review date<input type="date" name="review_date" id="reviewDate" required></label>
+  </div>
+  <div class="info-note"><strong>Reminder rule</strong><p>An automatic email reminder is scheduled for two calendar days before the review date. The scheduler checks every 30 minutes; the email requires Gmail SMTP setup.</p></div>
+  <div class="form-actions"><a class="button secondary" href="{{ url_for('dashboard') }}">Cancel</a><button class="button primary" type="submit" {% if not interns %}disabled{% endif %}>Assign task & notify →</button></div>
+</form></div>
+{% endblock %}

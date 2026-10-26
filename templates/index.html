@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}InternAI · Smart Internship Management{% endblock %}
+{% block content %}
+<section class="hero">
+  <div class="hero-copy">
+    <span class="eyebrow">SMART INTERNSHIP OPERATIONS</span>
+    <h1>Manage interns.<br><span>Never miss a review.</span></h1>
+    <p>One workspace for intern records, daily task assignments, review dates and automatic email reminders two days before every review.</p>
+    <a class="button primary" href="{{ url_for('login') }}">Open dashboard <span>→</span></a>
+    <div class="hero-points"><span>✓ Role-based login</span><span>✓ Automatic reminders</span><span>✓ Review tracking</span></div>
+  </div>
+  <div class="hero-card">
+    <div class="mock-top"><span></span><span></span><span></span><small>Review overview</small></div>
+    <div class="mock-stat-row"><div><small>Active tasks</small><strong>24</strong></div><div><small>Reviews soon</small><strong>08</strong></div></div>
+    <div class="mock-task"><div class="task-symbol purple">UI</div><div><strong>Build login page</strong><small>Review in 2 days</small></div><span class="pill due">Reminder</span></div>
+    <div class="mock-task"><div class="task-symbol teal">PY</div><div><strong>Python data task</strong><small>Submission received</small></div><span class="pill done">Submitted</span></div>
+    <div class="reminder-preview"><span class="mail-icon">✉</span><div><strong>Reminder scheduled</strong><small>Automatic email · 2 days before review</small></div><span class="check">✓</span></div>
+  </div>
+</section>
+<section class="feature-grid">
+  <article class="feature"><div class="feature-icon">01</div><h3>Intern directory</h3><p>Keep intern and mentor details in one searchable database.</p></article>
+  <article class="feature"><div class="feature-icon">02</div><h3>Task assignment</h3><p>Assign work with a deadline, owner and planned review date.</p></article>
+  <article class="feature"><div class="feature-icon">03</div><h3>Smart reminders</h3><p>Email reminders are checked automatically and recorded to avoid duplicates.</p></article>
+</section>
+{% endblock %}

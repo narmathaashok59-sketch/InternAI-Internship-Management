@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}Dashboard · InternAI{% endblock %}
+{% block content %}
+<div class="page-heading">
+  <div><span class="eyebrow">OVERVIEW</span><h1>Hello, {{ session.get('full_name') }} 👋</h1><p class="muted">Here’s the current internship task overview.</p></div>
+  <div class="heading-actions">
+    {% if role == 'admin' %}<a class="button secondary" href="{{ url_for('create_user') }}">＋ Add user</a>{% endif %}
+    {% if role in ['admin','mentor'] %}<a class="button primary" href="{{ url_for('create_task') }}">＋ Assign task</a>{% endif %}
+  </div>
+</div>
+<div class="stats-grid">
+  {% if role in ['admin','mentor'] %}<div class="stat-card"><span class="stat-icon purple-bg">♙</span><small>Total interns</small><strong>{{ stats.interns }}</strong><span class="stat-foot">Registered students</span></div>{% endif %}
+  <div class="stat-card"><span class="stat-icon blue-bg">▤</span><small>{{ 'All tasks' if role != 'intern' else 'My tasks' }}</small><strong>{{ stats.tasks }}</strong><span class="stat-foot">Assigned work items</span></div>
+  <div class="stat-card"><span class="stat-icon orange-bg">◷</span><small>In progress / pending</small><strong>{{ stats.pending }}</strong><span class="stat-foot">Needs follow-up</span></div>
+  <div class="stat-card"><span class="stat-icon green-bg">✓</span><small>Approved</small><strong>{{ stats.completed }}</strong><span class="stat-foot">Successfully reviewed</span></div>
+</div>
+{% if role in ['admin','mentor'] %}
+<section class="panel">
+  <div class="panel-heading"><div><h2>Team members</h2><p class="muted">Interns, mentors and admin accounts</p></div><a href="{{ url_for('create_user') }}" class="text-link">＋ Add user</a></div>
+  <div class="table-wrap"><table><thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Department</th></tr></thead><tbody>
+  {% for user in users %}<tr><td><div class="person"><span class="avatar">{{ user.full_name[:1]|upper }}</span><strong>{{ user.full_name }}</strong></div></td><td>{{ user.email }}</td><td><span class="role-chip">{{ user.role|title }}</span></td><td>{{ user.department or '—' }}</td></tr>{% else %}<tr><td colspan="4" class="empty">No users found.</td></tr>{% endfor %}
+  </tbody></table></div>
+</section>
+{% endif %}
+<section class="panel">
+  <div class="panel-heading"><div><h2>{{ 'Task management' if role != 'intern' else 'My assigned tasks' }}</h2><p class="muted">Deadlines, review dates and current status</p></div><input id="taskSearch" class="search-input" type="search" placeholder="Search tasks…"></div>
+  <div class="table-wrap"><table id="tasksTable"><thead><tr><th>Task</th>{% if role != 'intern' %}<th>Intern</th>{% endif %}<th>Deadline</th><th>Review date</th><th>Status</th><th>Details / action</th></tr></thead><tbody>
+  {% for task in tasks %}
+  <tr class="task-row">
+    <td><strong>{{ task.title }}</strong><div class="subline">{{ task.description }}</div>{% if task.mentor_feedback %}<div class="feedback"><b>Feedback:</b> {{ task.mentor_feedback }}</div>{% endif %}</td>
+    {% if role != 'intern' %}<td>{{ task.intern_name }}<div class="subline">{{ task.intern_email }}</div></td>{% endif %}
+    <td>{{ task.deadline or '—' }}</td><td>{{ task.review_date }}</td>
+    <td><span class="status status-{{ task.status|lower|replace(' ','-') }}">{{ task.status }}</span>{% if task.reminder_sent %}<div class="subline">Reminder sent</div>{% endif %}</td>
+    <td>
+      {% if role == 'intern' and task.status != 'Approved' %}
+      <form method="post" action="{{ url_for('submit_task', task_id=task.id) }}" class="inline-form">
+        <textarea name="submission" rows="2" placeholder="Add work link or progress notes…">{{ task.submission }}</textarea>
+        <select name="status"><option value="In Progress" {% if task.status == 'In Progress' %}selected{% endif %}>In Progress</option><option value="Submitted" {% if task.status == 'Submitted' %}selected{% endif %}>Submit for review</option></select>
+        <button class="button small primary" type="submit">Save</button>
+      </form>
+      {% elif role in ['admin','mentor'] %}
+      <div class="subline"><b>Submission:</b> {{ task.submission or 'Not submitted yet' }}</div>
+      <form method="post" action="{{ url_for('review_task', task_id=task.id) }}" class="inline-form">
+        <select name="status"><option value="Approved">Approved</option><option value="Needs Changes">Needs Changes</option><option value="In Progress">In Progress</option></select>
+        <input name="mentor_feedback" placeholder="Feedback for intern">
+        <button class="button small secondary" type="submit">Review</button>
+      </form>
+      {% else %}<span class="muted">Task approved</span>{% endif %}
+    </td>
+  </tr>
+  {% else %}<tr><td colspan="6" class="empty">No tasks yet. {% if role in ['admin','mentor'] %}<a href="{{ url_for('create_task') }}">Assign the first task.</a>{% endif %}</td></tr>{% endfor %}
+  </tbody></table></div>
+</section>
+{% endblock %}

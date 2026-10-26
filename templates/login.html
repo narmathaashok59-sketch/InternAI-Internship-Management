@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Log in · InternAI{% endblock %}
+{% block content %}
+<section class="auth-wrap">
+  <div class="auth-aside"><span class="eyebrow">WELCOME BACK</span><h1>Your internship workspace, all in one place.</h1><p>Sign in to view tasks, track progress and prepare for reviews.</p><div class="aside-mark">IA</div></div>
+  <form class="form-card" method="post">
+    <h2>Sign in</h2><p class="muted">Use your InternAI account details.</p>
+    <label>Email address<input type="email" name="email" placeholder="you@company.com" required autocomplete="username"></label>
+    <label>Password<input type="password" name="password" placeholder="Enter your password" required autocomplete="current-password"></label>
+    <button class="button primary full" type="submit">Log in <span>→</span></button>
+    <div class="demo-note"><strong>First-time demo admin</strong><br>Email: admin@internai.local<br>Password: Admin@12345<br><small>Change this password and create your own admin account before real use.</small></div>
+  </form>
+</section>
+{% endblock %}
